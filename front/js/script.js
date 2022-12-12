@@ -13,13 +13,16 @@ fetch('http://localhost:3000/api/products')
   function Kanaps(index) {
     let zoneArticle = document.querySelector("#items");
     for (let article of index) {
-      zoneArticle.innerHTML += `<a href="./product.html?_id=${article._id}">
+      let contentArticle = document.createElement("a");
+      contentArticle.href = `./product.html?_id=${article._id}`
+      contentArticle.innerHTML = `
       <article>
         <img src="${article.imageUrl}" alt="${article.altTxt}">
         <h3 class="productName">${article.name}</h3>
         <p class="productDescription">${article.description}</p>
       </article>
-    </a>`;
+    `;
+    zoneArticle.append(contentArticle)
     }
   }
 
