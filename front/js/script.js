@@ -3,7 +3,7 @@
 fetch("http://localhost:3000/api/products")
   // conversion en json.
   .then((res) => res.json())
-  // on l'appel objetProduits
+  // devient objetProduits
   .then((objetProduits) => {
     // info sous forme tableau
     console.table(objetProduits);
