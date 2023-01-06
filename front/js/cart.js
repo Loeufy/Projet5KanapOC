@@ -2,16 +2,16 @@ const page = document.location.href;
 
 // Fetch
 if (page.match("cart")) {
-fetch("http://localhost:3000/api/products")
-  .then((res) => res.json())
-  .then((objetProduits) => {
+  fetch("http://localhost:3000/api/products")
+    .then((res) => res.json())
+    .then((objetProduits) => {
       console.log(objetProduits);
       affichagePanier(objetProduits);
-  })
-  .catch((err) => {
+    })
+    .catch((err) => {
       document.querySelector("#cartAndFormContainer").innerHTML = "<h1>erreur 404</h1>";
       console.log("erreur 404, sur ressource api: " + err);
-  });
+    });
 } else {
   console.log("sur page confirmation");
 }
@@ -20,7 +20,7 @@ fetch("http://localhost:3000/api/products")
 function affichagePanier(index) {
   let panier = JSON.parse(localStorage.getItem("panierStocké"));
   // panier supérieure à 0
-   if (panier && panier.length != 0) {
+  if (panier && panier.length != 0) {
     for (let choix of panier) {
       console.log(choix);
       for (let g = 0, h = index.length; g < h; g++) {
@@ -49,8 +49,8 @@ function affichagePanier(index) {
 
 function affiche(indexé) {
   let zonePanier = document.querySelector("#cart__items");
-  zonePanier.innerHTML += indexé.map((choix) => 
-  `<article class="cart__item" data-id="${choix._id}" data-couleur="${choix.couleur}" data-quantité="${choix.quantité}" data-prix="${choix.prix}"> 
+  zonePanier.innerHTML += indexé.map((choix) =>
+    `<article class="cart__item" data-id="${choix._id}" data-couleur="${choix.couleur}" data-quantité="${choix.quantité}" data-prix="${choix.prix}"> 
     <div class="cart__item__img">
       <img src="${choix.image}" alt="${choix.alt}">
     </div>
@@ -71,7 +71,7 @@ function affiche(indexé) {
       </div>
     </div>
   </article>`
-    ).join(""); 
+  ).join("");
   totalProduit();
 }
 
@@ -103,25 +103,29 @@ function suppression() {
   const cartdelete = document.querySelectorAll(".cart__item .deleteItem");
   cartdelete.forEach((cartdelete) => {
     cartdelete.addEventListener("click", () => {
-      let panier = JSON.parse(localStorage.getItem("panierStocké"));
-      for (let d = 0, c = panier.length; d < c; d++)
-        if (
-          panier[d]._id === cartdelete.dataset.id &&
-          panier[d].couleur === cartdelete.dataset.couleur
-        ) {
-          const num = [d];
-          let nouveauPanier = JSON.parse(localStorage.getItem("panierStocké"));
-          nouveauPanier.splice(num, 1);
-          if (nouveauPanier && nouveauPanier.length == 0) {
-            document.querySelector("#totalQuantity").innerHTML = "0";
-            document.querySelector("#totalPrice").innerHTML = "0";
-            document.querySelector("h1").innerHTML =
-              "Vous n'avez pas d'article dans votre panier";
+      let deleteConfirmation = confirm("Etes vous sur de vouloir supprimer ce produit du panier ?");
+      if (deleteConfirmation) {
+        let panier = JSON.parse(localStorage.getItem("panierStocké"));
+        for (let d = 0, c = panier.length; d < c; d++) {
+          if (
+            panier[d]._id === cartdelete.dataset.id &&
+            panier[d].couleur === cartdelete.dataset.couleur
+          ) {
+            const num = [d];
+            let nouveauPanier = JSON.parse(localStorage.getItem("panierStocké"));
+            nouveauPanier.splice(num, 1);
+            if (nouveauPanier && nouveauPanier.length == 0) {
+              document.querySelector("#totalQuantity").innerHTML = "0";
+              document.querySelector("#totalPrice").innerHTML = "0";
+              document.querySelector("h1").innerHTML =
+                "Vous n'avez pas d'article dans votre panier";
+            }
+            localStorage.panierStocké = JSON.stringify(nouveauPanier);
+            totalProduit();
+            return location.reload();
           }
-          localStorage.panierStocké = JSON.stringify(nouveauPanier);
-          totalProduit();
-          return location.reload();
         }
+      }
     });
   });
 }
@@ -242,7 +246,7 @@ if (page.match("cart")) {
     if (valeur === "" && regMatch === null) {
       document.querySelector("#emailErrorMsg").textContent = "Veuillez renseigner votre email.";
       document.querySelector("#emailErrorMsg").style.color = "white";
-    } else if ( regValide !== 0) {
+    } else if (regValide !== 0) {
       document.querySelector("#emailErrorMsg").innerHTML = "Caractère non valide";
       document.querySelector("#emailErrorMsg").style.color = "white";
     } else if (valeur != "" && regMatch == null) {
@@ -270,8 +274,8 @@ function couleurRegex(regSearch, valeurEcoute, inputAction) {
 }
 
 function texteInfo(regex, pointage, zoneEcoute) {
-      if (page.match("cart")) {
-      zoneEcoute.addEventListener("input", (e) => {
+  if (page.match("cart")) {
+    zoneEcoute.addEventListener("input", (e) => {
       valeur = e.target.value;
       index = valeur.search(regex);
       if (valeur === "" && index != 0) {
@@ -282,8 +286,8 @@ function texteInfo(regex, pointage, zoneEcoute) {
         document.querySelector(pointage).style.color = "white";
         // pour le reste des cas
       } else {
-      document.querySelector(pointage).innerHTML = "Caratères acceptés pour ce champ.";
-      document.querySelector(pointage).style.color = "white";
+        document.querySelector(pointage).innerHTML = "Caratères acceptés pour ce champ.";
+        document.querySelector(pointage).style.color = "white";
       }
     });
   }
@@ -317,17 +321,17 @@ if (page.match("cart")) {
 
 let panierId = [];
 function tableauId() {
-// appel des ressources
-let panier = JSON.parse(localStorage.getItem("panierStocké"));
-// récupération des id produit dans panierId
-if (panier && panier.length > 0) {
-  for (let indice of panier) {
-    panierId.push(indice._id);
+  // appel des ressources
+  let panier = JSON.parse(localStorage.getItem("panierStocké"));
+  // récupération des id produit dans panierId
+  if (panier && panier.length > 0) {
+    for (let indice of panier) {
+      panierId.push(indice._id);
+    }
+  } else {
+    console.log("le panier est vide");
+    document.querySelector("#order").setAttribute("value", "Panier vide!");
   }
-} else {
-  console.log("le panier est vide");
-  document.querySelector("#order").setAttribute("value", "Panier vide!");
-}
 }
 
 // fonction récupération des donnée client
@@ -365,6 +369,7 @@ function envoiPaquet() {
     })
       .then((res) => res.json())
       .then((data) => {
+        localStorage.clear();
         window.location.href = `/front/html/confirmation.html?commande=${data.orderId}`;
       })
       .catch(function (err) {
@@ -373,18 +378,3 @@ function envoiPaquet() {
       });
   }
 }
-
-(function Commande() {
-  if (page.match("confirmation")) {
-    sessionStorage.clear();
-    localStorage.clear();
-    // valeur du numero de commande
-    let numCom = new URLSearchParams(document.location.search).get("commande");
-    document.querySelector("#orderId").innerHTML = `<br>${numCom}<br>Merci pour votre achat`;
-    console.log("valeur de l'orderId venant de l'url: " + numCom);
-    //réinitialisation
-    numCom = undefined;
-  } else {
-    console.log("sur page cart");
-  }
-})();
